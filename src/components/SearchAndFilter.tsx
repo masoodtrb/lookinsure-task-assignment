@@ -2,15 +2,23 @@
 
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
 import { useUserStoreShallow } from '@/store/StoreProvider';
+import useDebounce from '@/lib/hooks/useDebounce';
+import { useEffect, useState } from 'react';
 
 export default function SearchAndFilter() {
-    const { searchTerm, selectedCountry, countries, setSearchTerm, setSelectedCountry } = useUserStoreShallow((state) => ({
-        searchTerm: state.searchTerm,
+    const [localSearchTerm, setLocalSearchTerm] = useState('');
+    const { selectedCountry, countries, setSelectedCountry, setSearchTerm } = useUserStoreShallow((state) => ({
         selectedCountry: state.selectedCountry,
         countries: state.countries,
-        setSearchTerm: state.setSearchTerm,
         setSelectedCountry: state.setSelectedCountry,
+        setSearchTerm: state.setSearchTerm,
     }));
+
+    const debouncedSearchTerm = useDebounce(localSearchTerm, 500);
+
+    useEffect(() => {
+        setSearchTerm(debouncedSearchTerm);
+    }, [debouncedSearchTerm, setSearchTerm]);
 
     return (
         <Box>
@@ -21,8 +29,8 @@ export default function SearchAndFilter() {
                 <TextField
                     label="Search by name or email"
                     variant="outlined"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={localSearchTerm}
+                    onChange={(e) => setLocalSearchTerm(e.target.value)}
                     sx={{ minWidth: 300, flexGrow: 1 }}
                 />
                 <FormControl sx={{ minWidth: 200 }}>
