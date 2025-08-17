@@ -61,3 +61,4 @@ export default async function SSRPage() {
         </StoreProvider>
     );
 }
+export const revalidate = 30;
