@@ -7,7 +7,10 @@ import StatisticsChartPlaceholder from './StatisticsChartPlaceholder';
 import dynamic from 'next/dynamic';
 
 // Lazy load the StatisticsChart component
-const StatisticsChart = dynamic(() => import('./StatisticsChart'), {
+const StatisticsChart = dynamic(() => import(
+    /* webpackChunkName: "static-chart" */
+    './StatisticsChart'
+), {
     ssr: false,
     loading: () => <StatisticsChartPlaceholder />,
 });

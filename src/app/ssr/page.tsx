@@ -56,7 +56,7 @@ export default async function SSRPage() {
                         Random User Data loaded on Server Side
                     </Typography>
                 </Box>
-                <UserDashboard />
+                <UserDashboard isSSR />
             </Container>
         </StoreProvider>
     );

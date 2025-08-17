@@ -1,22 +1,32 @@
 'use client';
 
-import { Box, Paper, CircularProgress, Alert } from '@mui/material';
+import { Box, Paper, Alert } from '@mui/material';
 import SearchAndFilter from './SearchAndFilter';
 import StatisticsWidget from './StatisticsWidget';
 import UserCardList from './UserCardList';
 import { useUserStoreShallow } from '@/store/StoreProvider';
+import UserDashboardSkeleton from './UserDashboardSkeleton';
+import { useEffect, useRef } from 'react';
 
-export default function UserDashboard() {
+export default function UserDashboard({ isSSR = false }: { isSSR?: boolean }) {
     const { loading, error, filteredUsers } = useUserStoreShallow((state) => ({
         loading: state.loading,
         error: state.error,
         filteredUsers: state.filteredUsers,
     }));
 
-    if (loading) {
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        isMounted.current = true;
+    }, []);
+
+    if ((loading || !isMounted.current) && !isSSR) {
         return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-                <CircularProgress size={60} />
+            <Box display="flex" justifyContent="center" alignItems="center" >
+                <Box sx={{ width: '100%', height: '100%' }}>
+                    <UserDashboardSkeleton />
+                </Box>
             </Box>
         );
     }
